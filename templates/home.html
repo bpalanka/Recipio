@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div  class="hero-panel">
+   
+   <img width = "120%" src="https://images.pexels.com/photos/3026802/pexels-photo-3026802.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+  
+   <div class="call-to-action">
+        <h1><b>Turn Simple Ingredients <br> Into Delicious Meals</b></h1>
+        <p>Our knowledgeable search engine will generate a variety of options to choose from based on what ingredients you have lying around. </p>
+        <button type="button" class="btn btn-outline-primary">Enter Ingredients</button>
+    </div>
+   </div>
+
+   <div  style="margin-top: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <h2>Enter Your Ingredients or upload a picture</h2>
+   <form action="/my-handling-form-page" method="post">
+        <textarea style="width:600px; height: 200px; border-radius: 20px; padding: 20px;" id="msg" name="user_message">            Enter all your ingredients seperated by a comma</textarea>
+  </form>
+</div>
+{% endblock content %}
