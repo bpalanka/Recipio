@@ -13,7 +13,7 @@ def ingredientInput(ingredients):
         counter += 1
 
     print("Ingredients entered:", ingredients)
-
+#made a change - sasha
     # Check if user wants to add more ingredients
     ans = input("Would you like to add more ingredients? (Yes/No): ")
     while ans.lower() in ["yes", "y"]:
