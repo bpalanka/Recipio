@@ -60,8 +60,7 @@ else:
 
 
 # Search:
-#search_string = "chicken garam masala"  # Query
-#search_string = "pork curry"  # Query
+
 query_result = AllRecipes.search(ingredients)
 
 # Get:
@@ -70,10 +69,13 @@ detailed_recipe = AllRecipes.get(main_recipe_url)  # Get the details of the firs
 
  
 # Calling DataFrame constructor on list
+#print(query_result)
 df = pd.DataFrame(query_result)
-#print(df)
+print(df)
 
 filtered_data = df[['name', 'rate']]
+#descending
+filtered_data = filtered_data.sort_values(by='rate', ascending=False)
 print(filtered_data)
 query_result = AllRecipes.search(query)
 
