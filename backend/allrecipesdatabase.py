@@ -58,8 +58,9 @@ else:
 
 
 # Search:
-search_string = "chicken garam masala"  # Query
-query_result = AllRecipes.search(search_string)
+#search_string = "chicken garam masala"  # Query
+    
+query_result = AllRecipes.search(query)
 
 # Get:
 main_recipe_url = query_result[0]['url']
