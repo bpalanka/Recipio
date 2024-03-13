@@ -56,9 +56,6 @@ elif user_input.upper() == "PICTURE":
 else:
     print("Invalid input. Please enter \"TYPE\" or \"PICTURE\".")
 
-
-
-
 # Search:
 
 query_result = AllRecipes.search(ingredients)
@@ -69,11 +66,12 @@ detailed_recipe = AllRecipes.get(main_recipe_url)  # Get the details of the firs
 
  
 # Calling DataFrame constructor on list
-#print(query_result)
+
 df = pd.DataFrame(query_result)
-print(df)
+#print(df)
 
 filtered_data = df[['name', 'rate']]
+
 #descending
 filtered_data = filtered_data.sort_values(by='rate', ascending=False)
 print(filtered_data)
