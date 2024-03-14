@@ -34,6 +34,12 @@ if user_input.upper() == "TYPE":
     # Empty ingredients list
     ingredients = []
     ingredientInput(ingredients)
+
+    #if ingredients list is still empty, ask again
+    while ingredients == []:
+        print("No ingredients were entered. \n")
+        ingredientInput(ingredients)
+        
     # Search:
     query = " ".join(ingredients)
     print("Searching for recipes with ingredients:", query)
