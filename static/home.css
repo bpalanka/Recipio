@@ -1,3 +1,5 @@
+
+
 .home-body{
     padding: 50px;
     display: flex;
@@ -23,5 +25,19 @@
 
 .call-to-action p{
     letter-spacing: .1rem;
+}
+
+
+.recipe-card{
+ 
+    width: 30%;
+    height: 40%;
+    margin: 20px;
+}
+
+.recipe-cards{
+ 
+    display: flex;
+    flex-wrap: wrap;
 }
 
