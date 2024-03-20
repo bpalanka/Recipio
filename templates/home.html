@@ -13,13 +13,22 @@
 
    <div  style="margin-top: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <h2>Enter Your Ingredients or upload a picture</h2>
-   <form id="handling-form" action="/my-handling-form-page" method="post">
-        <textarea style="width:600px; height: 200px; border-radius: 20px; padding: 20px;" id="msg" name="user_message">            Enter all your ingredients seperated by a comma</textarea>
-  </form>
+   <form id="handling-form" action="#" method="post">
+        <textarea style="width:600px; height: 200px; border-radius: 20px; padding: 20px;"  type = "text" id="user_query" name="user_query"></textarea>
+         <input type="submit" value="submit">
+   </form>
 
+  <div class="recipe-cards">
   {% for recipe in recipes %}
-     <h1>{{recipe.name}}</h1>
-     <h1>{{recipe.rate}}</h1>
-  {% endfor %}
+
+   <div  class="recipe-card">
+      <img style="width: 100%; height: auto; max-width: 100%; border-radius: 20px;" src={{recipe.image}} alt="">
+      <h4><b>{{recipe.name}}</b></h4>
+      <p>{{recipe.rate}} / 5 rating</p>
+      <button  type="button" class="btn btn-outline-warning"><a style="color: black;"  target="_blank" rel="noopener noreferrer" href="{{recipe.url}}">Learn More</a></button>
+   </div>
+      
+   {% endfor %}
+   </div>
 </div>
 {% endblock content %}

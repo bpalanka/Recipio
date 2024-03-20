@@ -14,10 +14,11 @@ detailed_recipe = AllRecipes.get(main_recipe_url)  # Get the details of the firs
 
 # Calling DataFrame constructor on list
 df = pd.DataFrame(query_result)
-print(df)
+#print(df)
+
 
 filtered_data = df[['name', 'rate']]
-print(filtered_data)
+#print(filtered_data)
 
 
 # Display result:
