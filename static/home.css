@@ -1,4 +1,4 @@
-.home-body{
+.home-body {
     padding: 50px;
     display: flex;
     justify-content: center;
@@ -6,11 +6,11 @@
     flex-direction: column;
 }
 
-.hero-panel{
+.hero-panel {
     display: flex;
 }
 
-.call-to-action{
+.call-to-action {
     width: 90%;
     margin-left: 100px;
     display: flex;
@@ -18,10 +18,23 @@
     align-items: start;
     justify-content: center;
 
- 
+
 }
 
-.call-to-action p{
+.call-to-action p {
     letter-spacing: .1rem;
 }
 
+
+.recipe-card {
+
+    width: 30%;
+    height: 40%;
+    margin: 20px;
+}
+
+.recipe-cards {
+
+    display: flex;
+    flex-wrap: wrap;
+}
