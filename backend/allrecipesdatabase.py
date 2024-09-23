@@ -2,40 +2,27 @@ from allrecipes import AllRecipes
 import pandas as pd
 
 # Ask for ingredients
-def ingredientInput(ingredients):
-    # Ask user for ingredients list and keep going
-    print("Please enter the ingredients you have: (hit Enter twice to end)")
+def getIngredientList(prompt):
+    """Ask user for ingredient repeatedly to construct list.
+    .param: prompt String that will ask user if they want to include or exclude ingredients
+    in this list.
+    """
+    print(prompt)
+
     counter = 1
+    ingredients = []
     while True:
         user_input = input("Enter ingredient {}: ".format(counter))
         if not user_input.strip():
-            break
+            ans = input("Would you like to add more ingredients? (Yes/No): ")
+            if ans in ["yes", "y"]:
+                continue
+            else:
+                break
         ingredients.append(user_input)
         counter += 1
     print("Ingredients entered:", ingredients)
-
-def exclingredientInput(ingredients):
-    # Ask user for ingredients list and keep going
-    print("Please enter the ingredients you do not want in your recipe: (hit Enter twice to end)")
-    counter = 1
-    while True:
-        user_input = input("Enter ingredient {}: ".format(counter))
-        if not user_input.strip():
-            break
-        ingredients.append(user_input)
-        counter += 1
-
-    print("Ingredients entered:", ingredients)
-
-    # Check if user wants to add more ingredients
-    ans = input("Would you like to add more ingredients? (Yes/No): ")
-    while ans.lower() in ["yes", "y"]:
-        user_input = input("Enter ingredient {}: ".format(counter))
-        if not user_input.strip():
-            break
-        ingredients.append(user_input)
-        counter += 1
-        ans = input("Would you like to add more ingredients? (Yes/No): ")
+    return ingredients
 
 def main():
     # User input
@@ -44,15 +31,17 @@ def main():
 
     if user_input.upper() == "TYPE":
         # Empty ingredients list
-        ingredients = []
-        exclIngred = []
-        ingredientInput(ingredients)
-        exclingredientInput(exclIngred)
 
-        #if ingredients list is still empty, ask again
-        while ingredients == []:
-            print("No ingredients were entered. \n")
-            ingredientInput(ingredients)
+        while True:
+            ingredients = getIngredientList("Please enter the ingredients you have: (hit Enter twice to end)")
+            
+            #if ingredients list is still empty, ask again
+            if ingredients == []:
+                print("No ingredients were entered. \n")
+            else:
+                break
+
+        exclIngred = getIngredientList("Please enter the ingredients you do not want in your recipe: (hit Enter twice to end)")
             
         # Search:
         query = " ".join(ingredients)
