@@ -1,49 +1,76 @@
 from allrecipes import AllRecipes
 import pandas as pd
 
-# Ask for ingredients
-def getIngredientList(prompt):
+def getIngredientList(prompt, include_measurement=True):
     """Ask user for ingredients repeatedly to construct a list.
     param: prompt String that will ask user if they want to include or exclude ingredients.
+    param: include_measurement Boolean to determine if measurements are needed.
     """
     print(prompt)
-    # Dictionary to store ingredients and their measurements
     user_dict = {}
+    
     while True:
-        key = input("Enter ingredient (or press Enter to stop): ")
-        if not key:  # Stop if key is empty
+        ingredient = input("Enter ingredient (or press Enter to stop): ")
+        if not ingredient:  # Stop if ingredient is empty
             print("Ending list...")
             break
-        value = input(f"Enter measurement for {key} (include units): ")
-        if not value:  # Stop if value is empty
-            print("Measurement cannot be empty. Please provide a value.")
-            continue  # Repeat the loop
 
+        # Ask for measurement if including ingredients
+        if include_measurement:
+            while True:
+                measurement = input(f"Enter measurement for {ingredient} (include units): ")
+                if measurement:  # Only accept non-empty measurement
+                    break
+                print("Measurement cannot be empty. Please provide a value.")
+        else:
+            measurement = None  # No measurement for excluded ingredients
+        
         # Add to the dictionary
-        user_dict[key] = value
+        user_dict[ingredient] = measurement
     
     return user_dict
 
-
 def main():
-    # User input
     print("Welcome to Recip.io!")
 
-    # Get ingredients from user
-    ingredients_incl = getIngredientList("Please start typing your ingredients and measurements below (hit enter twice to end your list)")
-
-    # Print ingredient list (for testing purposes)
+    # Get ingredients to include
+    ingredients_incl = getIngredientList("Please start typing your ingredients and measurements below (hit enter twice to end your list)", include_measurement=True)
     print("Ingredients entered:", ingredients_incl)
 
-    #Get ingredients the user wants to exclude
-    ingredients_excl = getIngredientList("Please start typing your ingredients and measurements below (hit enter twice to end your list)")
-
-    # Get excluded ingredients
-    
+    # Get ingredients to exclude
+    ingredients_excl = getIngredientList("Please start typing the ingredients you want to exclude (hit enter twice to end your list)", include_measurement=False)
+    print("Ingredients excluded:", ingredients_excl)
 
     # If the ingredient list is empty, ask again
     if not ingredients_incl: 
         print("No ingredients were entered. Exiting...\n")
         return
 
+    # Collect the ingredients for searching recipes
+    query = ', '.join(ingredients_incl.keys())  # Form a query string from included ingredients
+    
+    # Search for recipes
+    query_result = AllRecipes.search(query)
+
+    # Check if results were returned
+    if not query_result:
+        print("No recipes found matching your ingredients.")
+        return
+
+    # Get the most relevant recipe
+    main_recipe_url = query_result[0]['url']
+    detailed_recipe = AllRecipes.get(main_recipe_url)  # Get the details of the first returned recipe
+
+    # Convert the query result to a DataFrame
+    df = pd.DataFrame(query_result)
+
+    # Display relevant data
+    print("Available Recipes:")
+
+    # Filter and sort the DataFrame
+    filtered_data = df['name', 'rate'].sort_values(by='rate', ascending=False)
+    print("Filtered and Sorted Recipes:")
+    print(filtered_data)
+
+# Run the main function
 main()
