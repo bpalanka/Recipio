@@ -91,7 +91,7 @@ def main():
     # Calling DataFrame constructor on list
 
     df = pd.DataFrame(query_result)
-    print(df)
+    # print(df)
 
     filtered_data = df[['name', 'rate']]
 
