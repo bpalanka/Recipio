@@ -42,25 +42,38 @@ def main():
                 break
 
         exclIngred = getIngredientList("Please enter the ingredients you do not want in your recipe: (hit Enter twice to end)")
-            
-        # Search:
-        query = " ".join(ingredients)
-        print("Searching for recipes with ingredients:", query)
+
+        print("Searching for recipes with ingredients:", ingredients)
         # Perform search based on the concatenated query
-        recipe_result = AllRecipes.search(query)
+        recipe_result = AllRecipes.search(ingredients)
         # exit()
 
-        # Get the main recipe URL from the search results
         if recipe_result:
-            #REMOVE INGREDIENTS 
+            #Search:
+            comboList = ingredients + exclIngred                #list of all ingredients
+            query_result = AllRecipes.search(ingredients)       #get recipes with desired ingredients, long array of links + data
+            eclquery_result = AllRecipes.search(comboList)      #get recipes with desired and undesired ingredients
+            
+            #filters out undesired recipes, adjusted to improve performance
+            for recipe in query_result:
+                # for excl in eclquery_result:
+                if recipe in eclquery_result:
+                    query_result.remove(recipe)
+
             main_recipe_url = recipe_result[0]['url']
             # Get the detailed information about the first recipe
             detailed_recipe = AllRecipes.get(main_recipe_url)
 
+            # Calling DataFrame constructor on list
+            df = pd.DataFrame(query_result)
+            filtered_data = df[['name', 'rate']]    #Gets a filtered DatatFrame with only the name and rating of all results.
+            #descending
+            filtered_data = filtered_data.sort_values(by='rate', ascending=False)
+            print(filtered_data)
             
 
             # Display result:
-            print("## %s:" % detailed_recipe['name'])  # Name of the recipe
+            #print("## %s:" % detailed_recipe['name'])  # Name of the recipe
             # Print other details of the recipe (like ingredients and steps) as needed
         else:
             print("No recipes found for the provided ingredients.")
@@ -69,35 +82,5 @@ def main():
         print("I am sorry, we do not have that feature right now!")
     else:
         print("Invalid input. Please enter \"TYPE\" or \"PICTURE\".")
-
-    # Search:
-    comboList = ingredients + exclIngred
-    print(comboList)
-    query_result = AllRecipes.search(ingredients)
-    eclquery_result = AllRecipes.search(comboList)
-
-    for recipe in query_result:
-        for excl in eclquery_result:
-            if(recipe == excl):
-                query_result.remove(recipe)
-
-    print(query_result)
-    #print(list(set(query_result.intersection(eclquery_result))))
-    # Get:
-    main_recipe_url = query_result[0]['url']
-    detailed_recipe = AllRecipes.get(main_recipe_url)  # Get the details of the first returned recipe (most relevant in our case)
-
-    
-    # Calling DataFrame constructor on list
-
-    df = pd.DataFrame(query_result)
-    print(df)
-
-    filtered_data = df[['name', 'rate']]
-
-    #descending
-    filtered_data = filtered_data.sort_values(by='rate', ascending=False)
-    print(filtered_data)
-    query_result = AllRecipes.search(query)
 
 main()
