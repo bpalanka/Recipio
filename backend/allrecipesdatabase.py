@@ -18,7 +18,7 @@ def getIngredientList(prompt, include_measurement=True):
         # Ask for measurement if including ingredients
         if include_measurement:
             while True:
-                measurement = input(f"Enter measurement for {ingredient} (include units): ")
+                measurement = input("Enter measurement for {ingredient} (include units): ")
                 if measurement:  # Only accept non-empty measurement
                     break
                 print("Measurement cannot be empty. Please provide a value.")
@@ -66,11 +66,13 @@ def main():
 
     # Display relevant data
     print("Available Recipes:")
-
+    print(df)
     # Filter and sort the DataFrame
-    filtered_data = df['name', 'rate'].sort_values(by='rate', ascending=False)
-    print("Filtered and Sorted Recipes:")
+    filtered_data = df[['name', 'rate']].sort_values(by='rate', ascending=False)
+    filtered_data = df['name']
     print(filtered_data)
+    #print("Filtered and Sorted Recipes:")
+    #print(filtered_data)
 
 # Run the main function
 main()
