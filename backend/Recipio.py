@@ -23,7 +23,7 @@ from IPython.display import display
 from IPython.display import Markdown
 
 #api key
-GOOGLE_API_KEY="AIzaSyDVzXO4sbVSVPDSccjiy4Mz3NDtWIDkwVU"
+GOOGLE_API_KEY="YOUR_API_KEY_HERE"
 genai.configure(api_key=GOOGLE_API_KEY)
 
 from PIL import Image
