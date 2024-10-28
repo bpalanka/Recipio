@@ -62,6 +62,10 @@ def main():
 
             main_recipe_url = recipe_result[0]['url']
             # Get the detailed information about the first recipe
+            #"https://www.allrecipes.com" = 26, remove the beginning part of the url and try
+            # to call get() with the shorter url part
+
+            
             detailed_recipe = AllRecipes.get(main_recipe_url)
 
             # Calling DataFrame constructor on list
