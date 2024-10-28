@@ -1,3 +1,4 @@
+#Working Recipio File
 import pandas as pd
 from allrecipes import AllRecipes
 
@@ -70,8 +71,7 @@ def main():
 
         # Display ingredients
         print("Ingredients:")
-        print(recipe.get('ingredients', 'Unknown Ingredients'))
-
+        #NEED to display Ingredients
         # Display steps
         print("\nSteps:")
         #NEED to display steps
