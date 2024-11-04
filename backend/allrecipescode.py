@@ -1,27 +1,93 @@
-#Working Recipio File
-import pandas as pd
-from allrecipes import AllRecipes
+import requests  # Required to make HTTP requests to the Spoonacular API
 
 def getIngredientList(prompt, include_measurement=True):
     print(prompt)
     user_dict = {}
     
     while True:
-        ingredient = input("Enter ingredient (or press Enter to stop): ")  
+        ingredient = input("Enter ingredient (or press Enter to stop): ").strip()
         if not ingredient:
-            print("Ending list...")
+            print("Ending list...\n")
             break
 
         if include_measurement:
-            measurement = input(f"Enter measurement for {ingredient} (include units): ").strip()
-            user_dict[ingredient] = measurement
+            measurement = input("Enter measurement for " + ingredient + " (include units): ").strip()
+            user_dict[ingredient.lower()] = measurement  # Store ingredients in lowercase for consistency
         else:
-            user_dict[ingredient] = None
+            user_dict[ingredient.lower()] = None
     
     return user_dict
 
+def search_recipes(api_key, include_ingredients, exclude_ingredients):
+    include = ','.join(include_ingredients.keys())  # Ingredients to include
+    exclude = ','.join(exclude_ingredients.keys())  # Ingredients to exclude
+    
+    # Prepare the API request
+    url = f"https://api.spoonacular.com/recipes/findByIngredients?apiKey={api_key}&ingredients={include}&ignorePantry=true&number=5"
+    if exclude:
+        url += f"&excludeIngredients={exclude}"
+    
+    print(f"Searching for recipes with URL: {url}")
+
+    response = requests.get(url)
+    
+    if response.status_code != 200:
+        print("Error fetching data from Spoonacular:", response.json())
+        return []
+    
+    return response.json()
+
+def get_recipe_details(api_key, recipe_id):
+    # Get detailed information about a specific recipe by its ID
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={api_key}"
+    response = requests.get(url)
+    
+    if response.status_code != 200:
+        print(f"Error fetching details for recipe ID {recipe_id}: {response.json()}")
+        return None
+    
+    return response.json()
+
+def display_recipes(api_key, recipes):
+    if not recipes:
+        print("No recipes found matching your ingredients.")
+        return
+
+    print("\nAvailable Recipes:\n" + "=" * 20 + "\n")
+    for idx, recipe in enumerate(recipes, 1):
+        recipe_id = recipe.get('id')
+        print(f"## Recipe {idx}: {recipe.get('title', 'Unknown Title')}")
+        print(f"ID: {recipe_id}")
+        print(f"Link: https://spoonacular.com/recipes/{recipe.get('title').replace(' ', '-')}-{recipe_id}")
+        
+        # Get detailed recipe information
+        detailed_recipe = get_recipe_details(api_key, recipe_id)
+        if detailed_recipe:
+            # Display ingredients used in the recipe
+            print("\nIngredients used in this recipe:")
+            for ingredient in detailed_recipe.get('extendedIngredients', []):
+                # Safely access ingredient information
+                ingredient_name = ingredient.get('name', 'Unknown Ingredient')
+                ingredient_amount = ingredient.get('amount', 'N/A')
+                ingredient_unit = ingredient.get('unit', '')
+                print(f"  - {ingredient_amount} {ingredient_unit} {ingredient_name}")
+
+            # Display cooking steps
+            print("\nCooking Steps:")
+            instructions = detailed_recipe.get('analyzedInstructions', [])
+            if instructions:
+                for step in instructions[0].get('steps', []):
+                    print(f"  - {step.get('step', 'Unknown step')}")
+            else:
+                print("  - No cooking steps found.")
+
+        print("\n" + "-" * 40 + "\n")
+
 def main():
-    print("Welcome to Recip.io!")
+    print("Welcome to Recip.io!\n")
+    
+    # Your actual API key
+    api_key = '34639591c01a4fe28a8a42da2678fa33'
 
     # Get included ingredients from user
     ingredients_incl = getIngredientList("Enter ingredients to include (with measurements):", include_measurement=True)
@@ -35,46 +101,12 @@ def main():
         print("No ingredients to include were entered. Exiting...")
         return
 
-    # Normalize the ingredient names for the query
-    query = ', '.join(ingredients_incl.keys()).lower()
+    # Search for recipes using Spoonacular API
+    recipes = search_recipes(api_key, ingredients_incl, ingredients_excl)
 
-    # Search recipes using AllRecipes API
-    try:
-        query_result = AllRecipes.search(query)  # Search for recipes
-    except Exception as e:
-        print("An error occurred while searching for recipes:", e)
-        return
+    # Display the found recipes with detailed ingredients and steps
+    display_recipes(api_key, recipes)
 
-    if not query_result:
-        print("No recipes found matching your ingredients.")
-        return
-
-    # Filter out recipes containing excluded ingredients
-    filtered_recipes = []
-    excluded_set = {excl.lower() for excl in ingredients_excl}  # Upper -> lowercase for case matching
-
-    for recipe in query_result:
-        recipe_ingredients = {ing.lower() for ing in recipe.get('ingredients', [])}  # Normalize recipe ingredients
-        print(recipe_ingredients)
-        # Check if the recipe contains any excluded ingredients
-        if excluded_set.intersection(recipe_ingredients):
-            continue
-
-        # If the recipe passes the filter, add it to the list
-        filtered_recipes.append(recipe)
-
-    # Display the filtered recipes with ingredients and steps
-    print("\nAvailable Recipes:")
-    for recipe in filtered_recipes:
-        print("Title:", recipe.get('name', 'Unknown Title'))
-        print("URL:", recipe.get('url', 'No URL Available'), "\n")
-
-        # Display ingredients
-        print("Ingredients:")
-        #NEED to display Ingredients
-        # Display steps
-        print("\nSteps:")
-        #NEED to display steps
-
-# Call the main function
-main()
+# Ensure that the main function is called only when this script is executed directly
+if __name__ == "__main__":
+    main()
