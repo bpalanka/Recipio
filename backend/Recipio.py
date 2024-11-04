@@ -23,7 +23,7 @@ from IPython.display import display
 from IPython.display import Markdown
 
 #api key
-GOOGLE_API_KEY="AIzaSyDVzXO4sbVSVPDSccjiy4Mz3NDtWIDkwVU"
+GOOGLE_API_KEY="YOUR_API_KEY_HERE"
 genai.configure(api_key=GOOGLE_API_KEY)
 
 from PIL import Image
@@ -35,7 +35,7 @@ def to_markdown(text):
 #this is the function that we're gonna use to run the image recognition thing
 def imager(image):
     model = genai.GenerativeModel('gemini-1.5-flash')
-    response = model.generate_content(["Generate a list of the ingredients provided in the following image using * as bulletpoints", image], stream=False)
+    response = model.generate_content(["Generate a list of the ingredients provided in the following image using * as bulletpoints and be specific about what the ingredients are and do not include duplicates", image], stream=False)
     to_markdown(response.text)
     print(response.text)
     return userinput(response)
@@ -84,7 +84,7 @@ blob = bucket.get_blob('spices.jpeg')
 blob.download_to_filename('spices.jpeg')
 '''
 def preload():
-    image_path = "backend\\spices.jpeg"
+    image_path = "spices.jpeg"
     input_image = Image.open(image_path)
     #input_image=Image.open(sys.stdin)
     process_image(input_image)
@@ -96,3 +96,5 @@ def preload():
         hold.append(input("Enter measurement for "+x+" (include units): "))
     return hold
     #store(input_image)
+#testing the function
+preload()
