@@ -36,6 +36,8 @@ def main():
 
     # Normalize the ingredient names for the query
     query = ', '.join(ingredients_incl.keys()).lower()
+    fullURL = 'https://api.spoonacular.com/recipes/complexSearch?query=' + query + '&apiKey=' + APIKEY
+    contents = urllib.request.urlopen(fullURL).read()
 
     # Search recipes using AllRecipes API
     try:
@@ -71,6 +73,9 @@ def main():
         # Display ingredients
         print("Ingredients:")
         print(recipe.get('ingredients', 'Unknown Ingredients'))
+
+        #"https://www.allrecipes.com" = 26, remove the beginning part of the url and try
+            # to call get() with the shorter url part
 
         # Display steps
         print("\nSteps:")
