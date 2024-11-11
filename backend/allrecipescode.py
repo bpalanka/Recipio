@@ -23,11 +23,11 @@ def search_recipes(api_key, include_ingredients, exclude_ingredients):
     exclude = ','.join(exclude_ingredients.keys())  # Ingredients to exclude
     
     # Prepare the API request
-    url = f"https://api.spoonacular.com/recipes/findByIngredients?apiKey={api_key}&ingredients={include}&ignorePantry=true&number=5"
+    url = "https://api.spoonacular.com/recipes/findByIngredients?apiKey=" + api_key + "&ingredients=" + include + "&ignorePantry=true&number=5"
     if exclude:
-        url += f"&excludeIngredients={exclude}"
+        url += "&excludeIngredients=" + exclude
     
-    print(f"Searching for recipes with URL: {url}")
+    print("Searching for recipes with URL: " + url)
 
     response = requests.get(url)
     
@@ -39,11 +39,11 @@ def search_recipes(api_key, include_ingredients, exclude_ingredients):
 
 def get_recipe_details(api_key, recipe_id):
     # Get detailed information about a specific recipe by its ID
-    url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={api_key}"
+    url = "https://api.spoonacular.com/recipes/" + str(recipe_id) + "/information?apiKey=" + api_key
     response = requests.get(url)
     
     if response.status_code != 200:
-        print(f"Error fetching details for recipe ID {recipe_id}: {response.json()}")
+        print("Error fetching details for recipe ID " + str(recipe_id) + ":", response.json())
         return None
     
     return response.json()
@@ -54,11 +54,12 @@ def display_recipes(api_key, recipes):
         return
 
     print("\nAvailable Recipes:\n" + "=" * 20 + "\n")
-    for idx, recipe in enumerate(recipes, 1):
+    recipe_count = 1  # Initialize a counter for recipes
+    for recipe in recipes:
         recipe_id = recipe.get('id')
-        print(f"## Recipe {idx}: {recipe.get('title', 'Unknown Title')}")
-        print(f"ID: {recipe_id}")
-        print(f"Link: https://spoonacular.com/recipes/{recipe.get('title').replace(' ', '-')}-{recipe_id}")
+        print("## Recipe " + str(recipe_count) + ": " + recipe.get('title', 'Unknown Title'))
+        print("ID: " + str(recipe_id))
+        print("Link: https://spoonacular.com/recipes/" + recipe.get('title').replace(' ', '-') + "-" + str(recipe_id))
         
         # Get detailed recipe information
         detailed_recipe = get_recipe_details(api_key, recipe_id)
@@ -70,18 +71,19 @@ def display_recipes(api_key, recipes):
                 ingredient_name = ingredient.get('name', 'Unknown Ingredient')
                 ingredient_amount = ingredient.get('amount', 'N/A')
                 ingredient_unit = ingredient.get('unit', '')
-                print(f"  - {ingredient_amount} {ingredient_unit} {ingredient_name}")
+                print("  - " + str(ingredient_amount) + " " + ingredient_unit + " " + ingredient_name)
 
             # Display cooking steps
             print("\nCooking Steps:")
             instructions = detailed_recipe.get('analyzedInstructions', [])
             if instructions:
                 for step in instructions[0].get('steps', []):
-                    print(f"  - {step.get('step', 'Unknown step')}")
+                    print("  - " + step.get('step', 'Unknown step'))
             else:
                 print("  - No cooking steps found.")
 
         print("\n" + "-" * 40 + "\n")
+        recipe_count += 1  # Increment the counter for each recipe
 
 def main():
     print("Welcome to Recip.io!\n")
@@ -107,6 +109,4 @@ def main():
     # Display the found recipes with detailed ingredients and steps
     display_recipes(api_key, recipes)
 
-# Ensure that the main function is called only when this script is executed directly
-if __name__ == "__main__":
-    main()
+main()
