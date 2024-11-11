@@ -89,7 +89,7 @@ def main():
     print("Welcome to Recip.io!\n")
     
     # Your actual API key
-    api_key = ''
+    api_key = '34639591c01a4fe28a8a42da2678fa33'
 
     # Get included ingredients from user
     ingredients_incl = getIngredientList("Enter ingredients to include (with measurements):", include_measurement=True)
