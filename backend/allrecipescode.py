@@ -1,21 +1,25 @@
 import requests  # Required to make HTTP requests to the Spoonacular API
-
-def getIngredientList(prompt, include_measurement=True):
+import recipio as recipe
+def getIngredientList(prompt, image=None, include_measurement=True):
     print(prompt)
     user_dict = {}
-    
-    while True:
-        ingredient = input("Enter ingredient (or press Enter to stop): ").strip()
-        if not ingredient:
-            print("Ending list...\n")
-            break
+    if not image: #manual input
+        while True:
+            ingredient = input("Enter ingredient (or press Enter to stop): ").strip()
+            if not ingredient:
+                print("Ending list...\n")
+                break
 
-        if include_measurement:
-            measurement = input("Enter measurement for " + ingredient + " (include units): ").strip()
-            user_dict[ingredient.lower()] = measurement  # Store ingredients in lowercase for consistency
-        else:
-            user_dict[ingredient.lower()] = None
-    
+            if include_measurement:
+                measurement = input("Enter measurement for " + ingredient + " (include units): ").strip()
+                user_dict[ingredient.lower()] = measurement  # Store ingredients in lowercase for consistency
+            else:
+                user_dict[ingredient.lower()] = None
+    else: 
+        i = 0
+        while i < len(image) - 1:
+            user_dict[image[i]] = image[i + 1]
+            i += 2
     return user_dict
 
 def search_recipes(api_key, include_ingredients, exclude_ingredients):
@@ -87,12 +91,13 @@ def display_recipes(api_key, recipes):
 
 def main():
     print("Welcome to Recip.io!\n")
-    
+    #if image recognition is used, preprocess the image
+    image=recipe.preload()
     # Your actual API key
     api_key = ''
-
+    
     # Get included ingredients from user
-    ingredients_incl = getIngredientList("Enter ingredients to include (with measurements):", include_measurement=True)
+    ingredients_incl = getIngredientList("Enter ingredients to include (with measurements):", image, include_measurement=True)
     print("Ingredients to include:", ingredients_incl)
 
     # Get excluded ingredients from user
