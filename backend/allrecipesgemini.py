@@ -1,7 +1,7 @@
 #Recipio with Gemini
 from allrecipes import AllRecipes
 import pandas as pd
-import Recipio as rec
+import recipio as rec
 
 def getIngredientList(prompt, image=None, include_measurement=True):
     """Collects ingredients from user input or image recognition output."""

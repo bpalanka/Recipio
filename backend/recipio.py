@@ -23,7 +23,7 @@ from IPython.display import display
 from IPython.display import Markdown
 
 #api key
-GOOGLE_API_KEY="YOUR_API_KEY_HERE"
+GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
 genai.configure(api_key=GOOGLE_API_KEY)
 
 from PIL import Image
@@ -35,7 +35,7 @@ def to_markdown(text):
 #this is the function that we're gonna use to run the image recognition thing
 def imager(image):
     model = genai.GenerativeModel('gemini-1.5-flash')
-    response = model.generate_content(["Generate a list of the ingredients provided in the following image using * as bulletpoints", image], stream=False)
+    response = model.generate_content(["Generate just a list of the ingredients provided in the following image using * as bulletpoints and try to be specific with the ingredients with no duplicate ingredients", image], stream=False)
     to_markdown(response.text)
     print(response.text)
     return userinput(response)
@@ -51,7 +51,8 @@ def userinput(contents):
         #the output should be an array of all the ingredients
         hold=[]
         ret=[]
-        for token in contents.text:
+        newP=contents.text+"\n"
+        for token in newP:
             if((token.isalpha or token.isspace()) and not token=="*"):
                 hold.append(token)
             #if the current token is a newline or the last element
